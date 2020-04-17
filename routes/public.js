@@ -1,10 +1,11 @@
 const express = require('express')
+const axios = require('axios')
+// const https = require('https')
 const router = express.Router()
 
 
-//admin dashboard having filter sort functions too
 router.get('/', (req, res)=>{
-  res.send('Working!')
+  res.sendfile('/public/index.html')
 })
 
 
