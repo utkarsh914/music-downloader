@@ -1,30 +1,44 @@
 const express = require('express')
-const axios = require('axios')
+const ytdl = require('ytdl-core')
+var search = require('youtube-search');
 // const https = require('https')
 const router = express.Router()
 
+var opts = {
+  maxResults: 1,
+  key: process.env.KEY
+};
 
-router.get('/', (req, res)=>{
-  let key = "key"
-  let q = req.query.q
-  var searchAPI = `https://www.googleapis.com/youtube/v3/search?part=id&q=${q}&type=video&key=${key}`
-  // var mp3 = {}
-  
-  axios.get(searchAPI)
-    .then(response =>{
-      return response.data.items[0].id.videoId
-    })
-    .then(id=>{
-      let mp3API = `http://michaelbelgium.me/ytconverter/convert.php?youtubelink=https://www.youtube.com/watch?v=${id}`
-      return axios.get(mp3API)
-    })
-    .then(response=>{
-      return res.json(response.data)
-    })
-    .catch(err=>{
-      return res.json({error: true, message: 'Server side error occured!'})
-    })
+router.get('/search', (req, res)=>{
+	let q = req.query.q
+	search(q, opts, (err, list)=>{
+		if (err || !list[0]) {
+			res.status(201).send({ error: true, message: 'Error Occured! Try again.' })
+			throw err;
+		}
+		else {
+			console.log(list[0])
+			res.status(200).json({ error: false, video: list[0] })
+		}
+	})
+})
 
+router.get('/download', async (req, res)=>{
+	try {
+		let { id, name } = req.query;
+		let URL = `https://youtube.com/watch?v=${id}`
+	  // res.header('Content-Disposition', 'attachment; filename="video.mp4"');
+	  res.header('Content-Type', 'application/octet-stream')
+	  	.header(`content-disposition`, `attachment; filename=${name}.mp3;`);
+
+		ytdl(URL, {
+    	format: 'mp3'
+    })
+    .pipe(res);
+	}
+	catch(e) {
+		res.status(400).send({ error: true, message: 'Error Occured!' })
+	}
 })
 
 
