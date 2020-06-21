@@ -48,7 +48,10 @@ router.get('/download', async (req, res) => {
       console.log('An error occurred: ' + err.message)
       // res.status(400).send('error fetching audio')
     })
-    .pipe(res, {end: true})
+    .writeToStream(res, function(retcode, error){
+      console.log('file has been converted succesfully');
+    });
+    // .pipe(res, {end: true})
 
   } catch (e) {
     res.status(400).send({ error: true, message: 'Error Occured!' })
