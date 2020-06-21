@@ -1,6 +1,7 @@
 const express = require('express')
 const ytdl = require('ytdl-core')
 var search = require('youtube-search')
+var ffmpeg = require('fluent-ffmpeg');
 // const https = require('https')
 const router = express.Router()
 
@@ -24,16 +25,30 @@ router.get('/search', (req, res) => {
 
 router.get('/download', async (req, res) => {
   try {
-    const { id, name } = req.query
+    const { id, name, artist } = req.query
     const URL = `https://youtube.com/watch?v=${id}`
-    // res.header('Content-Disposition', 'attachment; filename="video.mp4"');
+    
     res.header('Content-Type', 'application/octet-stream')
       .header('content-disposition', `attachment; filename=${name}.mp3;`)
 
-    ytdl(URL, {
-      format: 'mp3'
+    const download = ytdl(URL, { quality: 'highest' })
+    
+    ffmpeg(download)
+    .inputFormat('mp4')
+    .format('mp3')
+    // .audioBitrate(256)
+    .outputOptions('-metadata', 'title=' + name)
+    .outputOptions('-metadata', 'artist=' + artist)
+    .outputOptions('-metadata', 'publisher=' + 'Music-dl-ut by Utkarsh Tiwari')
+    .on('end', () => {
+      console.log('ended fuckfessfully')
     })
-      .pipe(res)
+    .on('error', function(err) {
+      console.log('An error occurred: ' + err.message)
+      res.status(400).send('error fetching audio')
+    })
+    .pipe(res, {end: true})
+
   } catch (e) {
     res.status(400).send({ error: true, message: 'Error Occured!' })
   }

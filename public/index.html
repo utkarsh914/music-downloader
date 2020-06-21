@@ -85,7 +85,7 @@
 					// h+= `<p><b>File size: </b>${(data.file_size/1048576).toFixed(2)} MB</p>\n`
 					h+= `<div class="row justify-content-center m-0 mb-2">\n`
 					h+= `<div class="col-md-4 p-1">\n`
-					h+= `<a class="btn btn-primary mycard" href="/api/download/?id=${video.id}&name=${video.title}">Download</a>\n`
+					h+= `<a class="btn btn-primary mycard" href="/api/download/?id=${video.id}&name=${video.title}&artist=${video.channelTitle}">Download</a>\n`
 					h+= `</div>\n`
 					h+= `<div class="col-md-4 p-1">\n`
 					h+= `<a class="btn btn-danger mycard" href="${video.link}" target="_blank">Youtube</a>\n`
