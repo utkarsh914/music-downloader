@@ -34,6 +34,7 @@ router.get('/download', async (req, res) => {
     const download = ytdl(URL, { quality: 'highest' })
     
     ffmpeg(download)
+    .setFfmpegPath('ffmpeg')
     .inputFormat('mp4')
     .format('mp3')
     // .audioBitrate(256)
@@ -45,7 +46,7 @@ router.get('/download', async (req, res) => {
     })
     .on('error', function(err) {
       console.log('An error occurred: ' + err.message)
-      res.status(400).send('error fetching audio')
+      // res.status(400).send('error fetching audio')
     })
     .pipe(res, {end: true})
 
