@@ -34,7 +34,7 @@ router.get('/download', async (req, res) => {
     const download = ytdl(URL, { quality: 'highest' })
     
     ffmpeg(download)
-    .setFfmpegPath(`/app/vendor/ffmpeg/ffmpeg`)
+    // .setFfmpegPath(`/app/vendor/ffmpeg/ffmpeg`)
     .inputFormat('mp4')
     .format('mp3')
     // .audioBitrate(256)
