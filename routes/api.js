@@ -1,9 +1,9 @@
 const express = require('express')
+const router = express.Router()
 const ytdl = require('ytdl-core')
 var search = require('youtube-search')
 var ffmpeg = require('fluent-ffmpeg');
 // const https = require('https')
-const router = express.Router()
 
 var opts = {
   maxResults: 1,
