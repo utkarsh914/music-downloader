@@ -46,7 +46,7 @@ router.get('/download', async (req, res) => {
 		})
     .on('end', () => {
       console.log('ended fuckfessfully')
-      res.download(path.join(__dirname, `../public/downloads/${name}.mp3`), (err)=>{
+      res.download(path.join(__dirname, `../tmp/${name}.mp3`), (err)=>{
       	res.status(400).send('error fetching audio')
       })
     })
@@ -54,7 +54,7 @@ router.get('/download', async (req, res) => {
       console.log('An error occurred: ' + err.message)
       res.status(400).send('error fetching audio')
     })
-    .save(path.join(__dirname, `../public/downloads/${name}.mp3`))
+    .save(path.join(__dirname, `../tmp/${name}.mp3`))
     // .writeToStream(res, function(retcode, error){
     //   console.log('file has been converted succesfully');
     // });

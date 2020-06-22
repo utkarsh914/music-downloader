@@ -5,6 +5,7 @@
 # dependencies
 /node_modules
 /public/downloads
+/tmp
 #environment vars
 .env
 
