@@ -4,6 +4,7 @@ const ytdl = require('ytdl-core')
 var search = require('youtube-search')
 var ffmpeg = require('fluent-ffmpeg')
 const path = require('path')
+const fs = require('fs')
 
 var opts = {
   maxResults: 1,
@@ -25,6 +26,9 @@ router.get('/search', (req, res) => {
 
 router.get('/download', async (req, res) => {
   try {
+    const dl_directory = path.join(__dirname, `../tmp`)
+    !fs.existsSync(dl_directory) && fs.mkdirSync(dl_directory)
+
     const { id, name, artist } = req.query
     const URL = `https://youtube.com/watch?v=${id}`
     
@@ -46,7 +50,7 @@ router.get('/download', async (req, res) => {
 		})
     .on('end', () => {
       console.log('ended fuckfessfully')
-      res.download(path.join(__dirname, `../tmp/${name}.mp3`))
+      res.download(`${dl_directory}/${name}.mp3`)
       // res.download(path.join(__dirname, `../tmp/${name}.mp3`), (err)=>{
       // 	throw err
       // })
@@ -54,7 +58,7 @@ router.get('/download', async (req, res) => {
     .on('error', function(err) {
       throw err
     })
-    .save(path.join(__dirname, `../tmp/${name}.mp3`))
+    .save(`${dl_directory}/${name}.mp3`)
     // .writeToStream(res, function(retcode, error){
     //   console.log('file has been converted succesfully');
     // });
