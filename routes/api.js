@@ -40,19 +40,19 @@ router.get('/download', async (req, res) => {
     // .audioBitrate(256)
     .outputOptions('-metadata', 'title=' + name)
     .outputOptions('-metadata', 'artist=' + artist)
-    .outputOptions('-metadata', 'publisher=' + 'Music-dl-ut by Utkarsh Tiwari')
+    .outputOptions('-metadata', 'publisher=' + 'Music-dl by Utkarsh Tiwari')
    	.on('progress', function(progress) {
 			console.log(progress)
 		})
     .on('end', () => {
       console.log('ended fuckfessfully')
-      res.download(path.join(__dirname, `../tmp/${name}.mp3`), (err)=>{
-      	res.status(400).send('error fetching audio')
-      })
+      res.download(path.join(__dirname, `../tmp/${name}.mp3`))
+      // res.download(path.join(__dirname, `../tmp/${name}.mp3`), (err)=>{
+      // 	throw err
+      // })
     })
     .on('error', function(err) {
-      console.log('An error occurred: ' + err.message)
-      res.status(400).send('error fetching audio')
+      throw err
     })
     .save(path.join(__dirname, `../tmp/${name}.mp3`))
     // .writeToStream(res, function(retcode, error){
@@ -61,6 +61,7 @@ router.get('/download', async (req, res) => {
     // .pipe(res, {end: true})
 
   } catch (e) {
+  	console.log(e.message)
     res.status(400).send({ error: true, message: 'Error Occured!' })
   }
 })
